@@ -48,8 +48,13 @@ RUN apt-get install -y lsb-release
 RUN apt-get install -y xdg-utils
 RUN apt-get install -y wget
 
+# create user 1000
+RUN addgroup --gid 1000 user
+RUN adduser --disabled-password --gecos '' --gid 1000 --uid 1000 user
+USER user
+
 # install nvm
-ENV NVM_DIR /usr/local/nvm
+ENV NVM_DIR /home/user/.nvm
 ENV NODE_VERSION 10.15.3
 RUN mkdir $NVM_DIR
 RUN curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash
@@ -61,8 +66,3 @@ RUN . $NVM_DIR/nvm.sh \
 # configure node
 ENV NODE_PATH $NVM_DIR/v$NODE_VERSION/lib/node_modules
 ENV PATH $NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
-
-# create user 1000
-RUN addgroup --gid 1000 user
-RUN adduser --disabled-password --gecos '' --gid 1000 --uid 1000 user
-USER user
